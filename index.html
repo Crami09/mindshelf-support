@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 12px 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu a.active {
+            background: #3498db;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .page p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <h1>My Books</h1>
+            <ul class="nav-menu">
+                <li><a href="#/" data-page="discover">Discover</a></li>
+                <li><a href="#/MyBooks" data-page="mybooks">My Books</a></li>
+                <li><a href="#/Search" data-page="search">Search</a></li>
+                <li><a href="#/Statistics" data-page="statistics">Statistics</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div id="discover" class="page active">
+                <h2>Discover</h2>
+                <p>Explore new books and recommendations.</p>
+            </div>
+
+            <div id="mybooks" class="page">
+                <h2>My Books</h2>
+                <p>View and manage your book collection.</p>
+            </div>
+
+            <div id="search" class="page">
+                <h2>Search</h2>
+                <p>Search for books by title, author, or genre.</p>
+            </div>
+
+            <div id="statistics" class="page">
+                <h2>Statistics</h2>
+                <p>View your reading statistics and insights.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const PAGES = {
+            'discover': 'discover',
+            'mybooks': 'mybooks',
+            'search': 'search',
+            'statistics': 'statistics'
+        };
+
+        function getCurrentPage(hash) {
+            hash = hash.replace('#/', '').toLowerCase();
+            if (hash === '' || hash === '#') return 'discover';
+            
+            const pageName = Object.keys(PAGES).find(page => 
+                page === hash.toLowerCase()
+            );
+            return pageName || 'discover';
+        }
+
+        function navigateToPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show current page
+            const currentPage = document.getElementById(pageName);
+            if (currentPage) {
+                currentPage.classList.add('active');
+            }
+
+            // Update nav active state
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === pageName) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Handle hash changes
+        window.addEventListener('hashchange', () => {
+            const currentPage = getCurrentPage(window.location.hash);
+            navigateToPage(currentPage);
+        });
+
+        // Initial navigation
+        const initialPage = getCurrentPage(window.location.hash);
+        navigateToPage(initialPage);
+    </script>
+</body>
+</html>
